@@ -1,0 +1,74 @@
+---
+title: "Week 1 - Uitwerking huiswerk"
+subtitle: "Beschrijvende statistiek"
+output: html_notebook
+---
+
+## Opdracht
+
+Bereken voor de gekozen dataset de volgende statistische parameters:
+
+* Gemiddelde
+* Standaard deviatie
+* Correlatie
+
+Gebruik hiervoor de standaard functies in R: `mean()`, `sd()` en `corr()`.
+
+```{r}
+## Laad packages
+library(tidyverse)
+
+## Functie om data in te lezen
+readData <- function(x) read.csv(paste0("../data/dino/",dataSets[x]))
+
+## Bestandsnamen datasets
+dataSets <- list.files(path = "../data/dino/.")
+
+## Vul het nummer van de dataset in die je toegewezen is. Bijvoorbeeld: 8
+setNr <- 9
+
+## Lees data in
+myDF <- readData(setNr)
+
+## Berekenen parameters voor X
+
+meansX <- sapply(c(1:11), function(x) mean(readData(x)[[2]]))
+medianX <- sapply(c(1:11), function(x) median(readData(x)[[2]]))
+stdevsX <- sapply(c(1:11), function(x) sd(readData(x)[[2]]))
+minX <- sapply(c(1:11), function(x) min(readData(x)[[2]]))
+maxX <- sapply(c(1:11), function(x) max(readData(x)[[2]]))
+
+summaryDFX <-  data.frame(meansX, medianX, stdevsX, minX, maxX)
+
+## Berekenen parameters voor Y
+
+meansY <- sapply(c(1:11), function(x) mean(readData(x)[[3]]))
+medianY <- sapply(c(1:11), function(x) median(readData(x)[[3]]))
+stdevsY <- sapply(c(1:11), function(x) sd(readData(x)[[3]]))
+minY <- sapply(c(1:11), function(x) min(readData(x)[[3]]))
+maxY <- sapply(c(1:11), function(x) max(readData(x)[[3]]))
+
+summaryDFY <-  data.frame(meansY, medianY, stdevsY, minY, maxY)
+
+summaryDFX
+summaryDFY
+
+
+## Bereken correlaties
+for(i in 1:11) {
+  print(cor(readData(i)[,2:3]))
+}
+```
+
+## Plot data
+
+```{r fig.width=2, fig.height=2}
+for(i in 1:11) {
+  x <- readData(i)[,2]
+  y <- readData(i)[,3]
+  plot(x, y, type = "p", pch = 19, cex = 0.5)
+}
+```
+
+### Source
+https://www.r-bloggers.com/data-fun-inspired-by-darasaurus/

@@ -1,0 +1,36 @@
+---
+title: "Data Driven Decision Making"
+subtitle: "Sessie 1"
+author: "Witek ten Hove"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  ioslides_presentation:
+    logo: "deeppink_sticker.png"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Data Driven Decision Making
+
+Belang van data verzamelen. Scheepslogboeken >> Klimaatverandering
+
+## Klimaatverandering
+
+![](climate.gif)
+
+## Data Driven Business
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/3C0aLuNIecc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Slide with R Output
+
+![](https://youtu.be/zNzZ1PfUDNk)
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
