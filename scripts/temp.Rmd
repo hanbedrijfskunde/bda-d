@@ -1,0 +1,61 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(animation)
+library(plotly)
+
+url <- "data/knmi.txt"
+temp_dat <- read.table(url, skip = 13, sep = ",", header = TRUE)
+colnames(temp_dat) <- c("STN", "YYYY", seq(1:12), "YEAR")
+
+temp_dat_monthly <- temp_dat %>%
+  select(-starts_with("STN")) %>%
+  select(-starts_with("YEAR")) %>%
+  filter(YYYY != 2019) %>%
+  gather(month, temperature, -YYYY) %>%
+  rename(year = YYYY)
+
+temp_dat_monthly$month <- temp_dat_monthly$month %>% as.numeric
+summary(temp_dat_monthly)
+temp_dat_monthly <- temp_dat_monthly %>% group_by(month) %>% mutate(anomaly = (temperature - mean(temperature)) * 0.1)
+
+mo <- months(seq(as.Date("1910/1/1"), as.Date("1911/1/1"), "months"))
+mo <- gsub("(^...).*", "\\1", mo)
+
+data <- temp_dat_monthly %>% filter(year == 1901)
+ggplot(data, aes(x=month, y=anomaly)) +
+  geom_point() +
+  geom_text(aes(label=anomaly), hjust=0,vjust=0) +
+  geom_hline(yintercept=0, color="black", lty=2) +
+  coord_polar() +
+  scale_x_continuous(labels=mo, breaks=1:13) +
+  scale_y_continuous(labels=NULL, breaks=NULL) +
+  ylab("") + xlab("")
+
+
+df <- data.frame(
+  gp = factor(rep(letters[1:3], each = 10)),
+  y = rnorm(30)
+)
+  
+ggplot(df, aes(gp, y)) +
+  geom_point() 
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
