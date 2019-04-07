@@ -1,0 +1,39 @@
+---
+title: "Geodata"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+## Load packages
+```{r}
+library(tidyverse)
+library(lubridate)
+library(leaflet)
+```
+
+
+## Read data
+```{r}
+
+## Read in data
+geoDF <- read.table(file = "../data/geo/geodata.txt", sep = ",", header = TRUE)
+head(geoDF)
+```
+
+## Prepare data
+```{r}
+geoDF$time <- geoDF$time %>% ymd_hms
+geoDF <- filter(geoDF, type == "T")
+```
+
+## Build map
+```{r}
+m <- leaflet(geoDF)
+m <- addTiles(m)
+m <- addCircles(m, lng=~longitude, lat=~latitude, popup=~time, radius = 3, color = "tomato")
+m
+```
+

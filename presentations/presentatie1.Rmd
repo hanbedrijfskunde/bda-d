@@ -6,6 +6,7 @@ date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   ioslides_presentation:
     logo: "deeppink_sticker.png"
+    css: styles.css
 ---
 
 ```{r setup, include=FALSE}
@@ -14,23 +15,54 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Data Driven Decision Making
 
-Belang van data verzamelen. Scheepslogboeken >> Klimaatverandering
+* Nicolaus Cruquius
+* John Snow
+* Florence Nightingale
+
+## Nicolaus Cruquius (1678 - 1754)
+
+<a title="Waarnemingen Cruquius Delft en Rijnsburg februari/maart 1727 (Bron: Archief Hoogheemraadschap van Rijnland)" href="https://cdn.knmi.nl/system/data_center_discover_blocks/image2s/000/000/119/xlarge/Waarnemingen_Cruquius.png?1432281391"><img width="780" src="https://cdn.knmi.nl/system/data_center_discover_blocks/image2s/000/000/119/xlarge/Waarnemingen_Cruquius.png?1432281391"></a>
 
 ## Klimaatverandering
 
 ![](climate.gif)
 
+## John Snow (1813 – 1858)
+
+<div class="columns-2" class="nounderline">
+
+<a class="nounderline" title="The original uploader was Rsabbatini at English Wikipedia. [CC BY 4.0 (https://creativecommons.org/licenses/by/4.0)], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:John_Snow.jpg"><img width="300" alt="John Snow" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/John_Snow.jpg/1024px-John_Snow.jpg"></a>
+
+<a class="nounderline" title="John Snow [Public domain], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Snow-cholera-map-1.jpg"><img width="400" alt="Snow-cholera-map-1" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Snow-cholera-map-1.jpg/512px-Snow-cholera-map-1.jpg"></a>
+
+</div>
+
+## Times of Cholera
+
+```{r message=FALSE, warning=FALSE}
+source("cholera.R")
+m2
+```
+
+## Florence Nightingale (1820 – 1910)
+
+<div class="columns-2" class="nounderline">
+
+<a title="After Henrietta Rae
+ [Public domain], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Florence_Nightingale._Coloured_lithograph._Wellcome_V0006579.jpg"><img width="400" alt="Florence Nightingale. Coloured lithograph. Wellcome V0006579" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Florence_Nightingale._Coloured_lithograph._Wellcome_V0006579.jpg/512px-Florence_Nightingale._Coloured_lithograph._Wellcome_V0006579.jpg"></a>
+
+<a title="w:Florence Nightingale (1820–1910). [Public domain], via Wikimedia Commons" href="https://commons.wikimedia.org/wiki/File:Nightingale-mortality.jpg"><img width="400" alt="Nightingale-mortality" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Nightingale-mortality.jpg/512px-Nightingale-mortality.jpg"></a>
+
+</div>
+
+
+## War in the East
+
+```{r message=FALSE, warning=FALSE}
+source("nightingale.R")
+p1
+```
+
 ## Data Driven Business
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/3C0aLuNIecc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-## Slide with R Output
-
-![](https://youtu.be/zNzZ1PfUDNk)
-
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
-```
-
