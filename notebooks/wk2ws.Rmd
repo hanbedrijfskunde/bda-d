@@ -8,10 +8,20 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
 
 ## Load packages
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(lubridate)
 library(leaflet)
+```
+
+## Base map
+```{r}
+library(leaflet)
+
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng=5.862262, lat=51.827223, popup="HAN Bedrijfskunde Nijmegen")
+m  # Print the map
 ```
 
 
@@ -31,9 +41,12 @@ geoDF <- filter(geoDF, type == "T")
 
 ## Build map
 ```{r}
-m <- leaflet(geoDF)
-m <- addTiles(m)
-m <- addCircles(m, lng=~longitude, lat=~latitude, popup=~time, radius = 3, color = "tomato")
-m
+m2 <- leaflet(geoDF)
+m2 <- addTiles(m)
+m2 <- addCircles(m, lng=~longitude, lat=~latitude, popup=~time, radius = 3, color = "tomato")
+m2
 ```
 
+## Opdrachten
+- Opdracht 1: Kies een locatie, zoek de coördinaten open en pas het eerste kaartje aan zodat deze naar de gekozen locatie verwijst.
+- Opdracht 2: Verzamel geodata via je mobiele telefoon, download deze als CSV, upload het bestand naar de RStudio Cloud en toon de data in een kaart (zie bovenstaande voorbeeld). Gebruik hiervoor de 'read.csv()' functie.
