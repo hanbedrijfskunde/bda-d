@@ -146,14 +146,14 @@ filter(top10Defc, deficiency >= 100/3)
 Map
 ```
 
-## Trends
+### Trends
 Helaas is er geen duidelijke verbetering zichtbaar als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een duidelijke verbetering hebben laten zien zijn Namibië, Ethiopië en Angola.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
 p1
 ```
 
-## Bronnen
+### Bronnen
 
 - Datopian. (z.d.). Country and Continent Codes List. Geraadpleegd 11 april 2019, van DataHub website: https://datahub.io/JohnSnowLabs/country-and-continent-codes-list
 - GDP (current US$) | Data. (z.d.). Geraadpleegd 11 april 2019, van https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
