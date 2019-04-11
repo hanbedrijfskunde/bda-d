@@ -1,0 +1,131 @@
+---
+title: "Sustainable Development Goals"
+output: html_notebook
+---
+
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+## Load libraries
+library(tidyverse)
+library(reshape2)
+library(leaflet)
+library(plotly)
+library(gapminder)
+```
+
+
+```{r include=FALSE}
+# Food deficiency
+## Read data, clean and restructure
+defcDF <- read.csv(file = "../data/hunger/API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10516643.csv", sep = ",", skip = 4, stringsAsFactors = FALSE)
+colnames(defcDF) <- gsub('X', '', colnames(defcDF), fixed=TRUE)
+defcDF <- select(defcDF, Country.Code, Country.Name, starts_with("20"), -c("2017", "2018"))
+defcDF <- defcDF[complete.cases(defcDF),]
+defcDFLng <- melt(defcDF,
+  variable.name = "year", 
+  value.name = "deficiency")
+defcDFLng$year <- defcDFLng$year %>% as.character %>% as.numeric
+
+# GDP
+## Read data, clean and restructure
+gdpDF <- read.csv(file = "../data/hunger/1ebbb266-8d1b-4ae6-83bb-90f2535568e6_Data.csv", sep = ",", stringsAsFactors = FALSE)
+colnames(gdpDF) <- gsub('.*R|\\.|R', '', colnames(gdpDF))
+gdpDF <- select(gdpDF, CountryCode, starts_with("20"), -c("2017", "2018"))
+gdpDF <- gdpDF[complete.cases(gdpDF),]
+valuesCols <- c(colnames(select(gdpDF, starts_with("20"))))
+gdpDF[,valuesCols] <- sapply(valuesCols, function(x) gsub('\\.\\.', NA, gdpDF[,x]))
+gdpDF[,valuesCols] <- sapply(valuesCols, function(x) as.numeric(gdpDF[,x]))
+gdpDFLng <- melt(gdpDF,
+  variable.name = "year",
+  value.name = "gdp")
+gdpDFLng$year <- gdpDFLng$year %>% as.character %>% as.numeric
+
+## Merge
+newDF <- merge(defcDFLng, gdpDFLng, by.x = c("Country.Code", "year"), by.y = c("CountryCode", "year")) %>% filter(year >= 2009)
+
+# Add Population
+## Read data, clean and restructure
+population <- read.csv(file = "../data/hunger/API_SP.POP.TOTL_DS2_en_csv_v2_10515200.csv", sep = ",", skip = 4, stringsAsFactors = FALSE) %>% select("Country.Code", "X2016")
+newDF <- merge(x = newDF, y = population, by.x = "Country.Code", by.y = "Country.Code")
+colnames(newDF)[6] <- "population"
+
+## Add continents
+continents <- read.csv(file = "../data/hunger/continents.csv", sep = ",", stringsAsFactors = FALSE) 
+newDF <- merge(x = newDF, y = continents[, c("Three_Letter_Country_Code", "Continent_Name")], by.x = "Country.Code", by.y = "Three_Letter_Country_Code")
+colnames(newDF)[7] <- "Continent.Name"
+
+## Build chart
+p1 <- newDF %>%
+  plot_ly(
+    x = ~gdp, 
+    y = ~deficiency, 
+    size = ~population, 
+    color = ~Continent.Name, 
+    frame = ~year, 
+    text = ~Country.Name, 
+    hoverinfo = "text",
+    type = 'scatter',
+    mode = 'markers'
+  ) %>%
+  layout(
+    xaxis = list(
+      type = "log",
+      height = 400
+    ),
+    yaxis = list(
+      title = "% of population undernourished"
+    )
+  )
+
+## Build Map
+WorldCountry <-geojsonio::geojson_read("../data/hunger/countries.geo.json", what = "sp", stringsAsFactors = FALSE)
+
+#basemap
+data_Map <- WorldCountry[WorldCountry$id %in% newDF$Country.Code, ]
+data_Map <- sp::merge(x = data_Map, y = defcDF[,c("Country.Code", "2016")], by.x = "id", by.y = "Country.Code")
+
+Map <- leaflet(data_Map, width = "100%") %>% addTiles() %>% addPolygons()
+
+#set bin and color for choropleth map
+bins <- c(0,10,20,30,40,50,60,70,Inf)
+pal <- colorBin("YlOrRd", domain = data_Map$`2016`, bins = bins)
+
+## set labels
+# labels <- data$Country.Code
+labels <- sprintf(
+  "<strong>%s</strong><br/>%g percent <sup></sup>",
+  data_Map$id, data_Map$`2016`) %>% lapply(htmltools::HTML)
+
+#add polygons,labels and mouse over effect
+Map <- Map %>% addPolygons(
+  fillColor = ~pal(data_Map$`2016`),
+  weight = 2,
+  opacity = 1,
+  color = 'white',
+  dashArray = '3',
+  fillOpacity = 0.7,
+  highlight = highlightOptions(
+     weight = 5,
+    color = "#666",
+    dashArray = "",
+    fillOpacity = 0.7,
+    bringToFront = TRUE),
+  label = labels,
+  labelOptions = labelOptions(
+    style = list("font-weight" = "normal", padding = "3px 8px"),
+    textsize = "15px",
+    direction = "auto")
+)
+```
+
+![](https://geolsoc.files.wordpress.com/2018/12/sustainable_development_goals.jpg)
+
+## 2 - Zero Hunger
+
+```{r echo=FALSE}
+Map
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
+p1
+```

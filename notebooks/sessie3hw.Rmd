@@ -1,0 +1,43 @@
+---
+title: "Sustainable Development Goals"
+output: html_notebook
+---
+
+![](https://geolsoc.files.wordpress.com/2018/12/sustainable_development_goals.jpg)
+
+Load libraries
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(leaflet)
+library(plotly)
+```
+
+### 2 - Zero Hunger
+```{r}
+defcDF <- read.csv(file = "data/API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10516643.csv", sep = ",", skip = 4)
+head(defcDF)
+```
+
+
+### 3 - Good Health
+Zie ook bijbehorende codeboek (pdf)
+```{r}
+ess7DF <- read.csv(file = "data/ESS7e02.2_F1.csv")
+ess7DF[c("cntry", "etfruit")] %>% head(10)
+```
+
+
+### 6 - Clean Water
+```{r}
+waterDF <- read.csv(file = "data/waterpumps.csv")
+head(waterDF, 10)
+```
+
+
+### 13 - Climate Action
+Zie ook bijbehorende codeboek (pdf)
+```{r}
+ess8DF <- read.csv(file = "data/ESS8e02.1.csv")
+ess8DF[sample(1:10000, 10), c("cntry", "eneffap")]
+```
+
