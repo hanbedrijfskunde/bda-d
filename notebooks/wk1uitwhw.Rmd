@@ -67,6 +67,7 @@ for(i in 1:11) {
   x <- readData(i)[,2]
   y <- readData(i)[,3]
   plot(x, y, type = "p", pch = 19, cex = 0.5)
+  title(main = paste("Dataset", i))
 }
 ```
 
