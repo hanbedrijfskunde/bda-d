@@ -1,8 +1,10 @@
 ---
 title: "Sustainable Development Goals"
+author: "by Witek ten Hove"
 output: html_notebook
 ---
 
+<hr>
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
 ## Load libraries
