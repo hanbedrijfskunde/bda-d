@@ -5,8 +5,18 @@ output: html_notebook
 
 ![](https://geolsoc.files.wordpress.com/2018/12/sustainable_development_goals.jpg)
 
-Load libraries
-```{r message=FALSE, warning=FALSE}
+<br>
+
+## Opdrachten
+1. Vind een dataset die een verband heeft met één van de thema's binnen de [VN SDGs](https://www.un.org/sustainabledevelopment/sustainable-development-goals/) en lees die in.
+2. Bouw een grafiek.
+3. Beschrijf het verhaal bij de data.
+
+Je mag ook één van onderstaande datasets als uitgangspunt nemen. Zorg wel dat je resultaat significant verschillend is van anderen (bewijs dat het je eigen werk is).
+
+<hr>
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(leaflet)
 library(plotly)
@@ -14,7 +24,7 @@ library(plotly)
 
 ### 2 - Zero Hunger
 ```{r}
-defcDF <- read.csv(file = "data/API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10516643.csv", sep = ",", skip = 4)
+defcDF <- read.csv(file = "../data/hunger/API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10516643.csv", sep = ",", skip = 4)
 head(defcDF)
 ```
 
@@ -22,14 +32,14 @@ head(defcDF)
 ### 3 - Good Health
 Zie ook bijbehorende codeboek (pdf)
 ```{r}
-ess7DF <- read.csv(file = "data/ESS7e02.2_F1.csv")
+ess7DF <- read.csv(file = "../data/sdg/ESS7e02.2_F1.csv")
 ess7DF[c("cntry", "etfruit")] %>% head(10)
 ```
 
 
 ### 6 - Clean Water
 ```{r}
-waterDF <- read.csv(file = "data/waterpumps.csv")
+waterDF <- read.csv(file = "../data/sdg/waterpumps.csv")
 head(waterDF, 10)
 ```
 
@@ -37,7 +47,6 @@ head(waterDF, 10)
 ### 13 - Climate Action
 Zie ook bijbehorende codeboek (pdf)
 ```{r}
-ess8DF <- read.csv(file = "data/ESS8e02.1.csv")
+ess8DF <- read.csv(file = "../data/sdg/ESS8e02.1.csv")
 ess8DF[sample(1:10000, 10), c("cntry", "eneffap")]
 ```
-

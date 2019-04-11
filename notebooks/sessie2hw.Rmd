@@ -3,50 +3,66 @@ title: "Geodata"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+Dit is een [R Markdown](http://rmarkdown.rstudio.com) Notebook. Als je de code uitvoert, worden de uitkomsten onder de code weergegeven.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Probeer ieder blok code uit door op de *Run* knop te klikken of door de cursor in de code te plaatsen en *Cmd+Shift+Enter* in te drukken.
 
-## Load packages
-```{r message=FALSE, warning=FALSE}
+## Opdrachten
+1. Kies een locatie, zoek de coördinaten open en pas het eerste kaartje aan zodat deze naar de gekozen locatie verwijst.
+
+2. Verzamel geodata via je mobiele telefoon, download deze als CSV, upload het bestand naar de RStudio Cloud en toon de data in een kaart (zie bovenstaande voorbeeld). Gebruik hiervoor de `read.csv()` functie.
+
+3. Bedenk een bedrijfskundige toepassing voor automatische datavergaring en beschrijf hoe de workflow volgens jou zou kunnen worden ingericht.
+
+## Voorbeelden
+```{r message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(lubridate)
 library(leaflet)
 ```
 
-## Base map
+### Base map
 ```{r}
 library(leaflet)
 
-m <- leaflet() %>%
+m1 <- leaflet() %>%
   addTiles() %>%  # Add default OpenStreetMap map tiles
-  addMarkers(lng=5.862262, lat=51.827223, popup="HAN Bedrijfskunde Nijmegen")
-m  # Print the map
+  addMarkers(lng=5.862262, lat=51.827223, label ="HAN Bedrijfskunde Nijmegen")
+m1  # Print the map
 ```
 
-
-## Read data
+### Fun icon
 ```{r}
+library(leaflet)
+icon <- awesomeIcons(
+  icon = 'university',
+  lib = 'fa',
+  iconColor = "white",
+  markerColor = "lightblue")
 
+m2 <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addAwesomeMarkers(lng=5.9494131, lat=51.9890336, icon = icon,label ="HAN Bedrijfskunde Arnhem")
+m2  # Print the map
+```
+
+### Meerdere datapunten
+```{r}
 ## Read in data
 geoDF <- read.table(file = "../data/geo/geodata.txt", sep = ",", header = TRUE)
 head(geoDF)
 ```
 
-## Prepare data
+
 ```{r}
 geoDF$time <- geoDF$time %>% ymd_hms
 geoDF <- filter(geoDF, type == "T")
 ```
 
-## Build map
-```{r}
-m2 <- leaflet(geoDF)
-m2 <- addTiles(m)
-m2 <- addCircles(m, lng=~longitude, lat=~latitude, popup=~time, radius = 3, color = "tomato")
-m2
-```
 
-## Opdrachten
-- Opdracht 1: Kies een locatie, zoek de coördinaten open en pas het eerste kaartje aan zodat deze naar de gekozen locatie verwijst.
-- Opdracht 2: Verzamel geodata via je mobiele telefoon, download deze als CSV, upload het bestand naar de RStudio Cloud en toon de data in een kaart (zie bovenstaande voorbeeld). Gebruik hiervoor de 'read.csv()' functie.
+```{r}
+m3 <- leaflet(geoDF)
+m3 <- addTiles(m3)
+m3 <- addCircles(m3, lng=~longitude, lat=~latitude, popup=~time, radius = 3, color = "tomato")
+m3
+```

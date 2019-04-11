@@ -10,11 +10,10 @@ library(tidyverse)
 library(reshape2)
 library(leaflet)
 library(plotly)
-library(gapminder)
 ```
 
 
-```{r include=FALSE}
+```{r message=FALSE, warning=FALSE, include=FALSE}
 # Food deficiency
 ## Read data, clean and restructure
 defcDF <- read.csv(file = "../data/hunger/API_SN.ITK.DEFC.ZS_DS2_en_csv_v2_10516643.csv", sep = ",", skip = 4, stringsAsFactors = FALSE)
@@ -45,9 +44,15 @@ newDF <- merge(defcDFLng, gdpDFLng, by.x = c("Country.Code", "year"), by.y = c("
 
 # Add Population
 ## Read data, clean and restructure
-population <- read.csv(file = "../data/hunger/API_SP.POP.TOTL_DS2_en_csv_v2_10515200.csv", sep = ",", skip = 4, stringsAsFactors = FALSE) %>% select("Country.Code", "X2016")
-newDF <- merge(x = newDF, y = population, by.x = "Country.Code", by.y = "Country.Code")
-colnames(newDF)[6] <- "population"
+population <- read.csv(file = "../data/hunger/API_SP.POP.TOTL_DS2_en_csv_v2_10515200.csv", sep = ",", skip = 4, stringsAsFactors = FALSE)
+colnames(population) <- gsub('X', '', colnames(population), fixed=TRUE)
+population <- select(population, Country.Code, starts_with("20"), -c("2017", "2018"))
+population <- population[complete.cases(population),]
+populationLng <- melt(population,
+  variable.name = "year", 
+  value.name = "population")
+populationLng$year <- populationLng$year %>% as.character %>% as.numeric
+newDF <- merge(x = newDF, y = populationLng, by.x = c("Country.Code", "year"), by.y = c("Country.Code", "year"))
 
 ## Add continents
 continents <- read.csv(file = "../data/hunger/continents.csv", sep = ",", stringsAsFactors = FALSE) 
@@ -62,7 +67,7 @@ p1 <- newDF %>%
     size = ~population, 
     color = ~Continent.Name, 
     frame = ~year, 
-    text = ~Country.Name, 
+    text = ~paste0(Country.Name,"\nPopulation: ", round(population/1000000,1), "bln\nDeficiency: ", deficiency), 
     hoverinfo = "text",
     type = 'scatter',
     mode = 'markers'
@@ -76,18 +81,24 @@ p1 <- newDF %>%
       title = "% of population undernourished"
     )
   )
+api_create(p1, filename = "zerohunger")
 
-## Build Map
+# Top 10 malnutrition
+top10Defc <- filter(newDF, year == 2016) %>%
+  select(Country.Name, deficiency) %>%
+  arrange(-deficiency)
+
+# Build Map
 WorldCountry <-geojsonio::geojson_read("../data/hunger/countries.geo.json", what = "sp", stringsAsFactors = FALSE)
 
-#basemap
+## basemap
 data_Map <- WorldCountry[WorldCountry$id %in% newDF$Country.Code, ]
 data_Map <- sp::merge(x = data_Map, y = defcDF[,c("Country.Code", "2016")], by.x = "id", by.y = "Country.Code")
 
 Map <- leaflet(data_Map, width = "100%") %>% addTiles() %>% addPolygons()
 
-#set bin and color for choropleth map
-bins <- c(0,10,20,30,40,50,60,70,Inf)
+## set bin and color for choropleth map
+bins <- c(0,10,20,100/3, Inf)
 pal <- colorBin("YlOrRd", domain = data_Map$`2016`, bins = bins)
 
 ## set labels
@@ -96,7 +107,7 @@ labels <- sprintf(
   "<strong>%s</strong><br/>%g percent <sup></sup>",
   data_Map$id, data_Map$`2016`) %>% lapply(htmltools::HTML)
 
-#add polygons,labels and mouse over effect
+## add polygons,labels and mouse over effect
 Map <- Map %>% addPolygons(
   fillColor = ~pal(data_Map$`2016`),
   weight = 2,
@@ -118,14 +129,34 @@ Map <- Map %>% addPolygons(
 )
 ```
 
-![](https://geolsoc.files.wordpress.com/2018/12/sustainable_development_goals.jpg)
+[![](https://www.isglobal.org/documents/10179/6939455/SDG+2+grande+en/09f80787-9980-4013-9053-81a53d313017?t=1539617604000)](https://www.undp.org/content/undp/en/home/sustainable-development-goals/goal-2-zero-hunger.html)
 
-## 2 - Zero Hunger
+<hr>
+### Inleiding
+In 2030 willen de landen die zich aan de [Sustainable Development Goals](https://unstats.un.org/sdgs/) hebben gecommiteerd alle vormen van honger en ondervoeding in de wereld hebben geëlimineerd. Wat is de status nu en zijn we op de goede weg?
+
+### Huidige status
+Er zijn `r dim(filter(top10Defc, deficiency >= 100/3))[1]` landen waar meer dan de een derde van de bevolking structureel ondervoed is (data 2016). Dit zijn de roodgekleurde landen op de kaart. Veruit de hoogste nood heerst in de Centraal Afrikaanse Republiek.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, paged.print=TRUE}
+filter(top10Defc, deficiency >= 100/3)
+```
 
 ```{r echo=FALSE}
 Map
 ```
 
+## Trends
+Helaas is er geen duidelijke verbetering zichtbaar als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een duidelijke verbetering hebben laten zien zijn Namibië, Ethiopië en Angola.
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
 p1
 ```
+
+## Bronnen
+
+- Datopian. (z.d.). Country and Continent Codes List. Geraadpleegd 11 april 2019, van DataHub website: https://datahub.io/JohnSnowLabs/country-and-continent-codes-list
+- GDP (current US$) | Data. (z.d.). Geraadpleegd 11 april 2019, van https://data.worldbank.org/indicator/NY.GDP.MKTP.CD
+- Population, total | Data. (z.d.). Geraadpleegd 11 april 2019, van https://data.worldbank.org/indicator/SP.POP.TOTL?locations=ES
+- Sundström, J. (2019). Annotated geo-json geometry files for the world. Contribute to johan/world.geo.json development by creating an account on GitHub. Geraadpleegd van https://github.com/johan/world.geo.json (Original work published 2011)
+- UN Stats Open SDG Data Hub. (z.d.). Geraadpleegd 11 april 2019, van http://unstats-undesa.opendata.arcgis.com/
