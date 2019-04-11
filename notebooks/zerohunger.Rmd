@@ -135,7 +135,7 @@ Map <- Map %>% addPolygons(
 
 <hr>
 ### Inleiding
-In 2030 willen de landen die zich aan de [Sustainable Development Goals](https://unstats.un.org/sdgs/) hebben gecommiteerd alle vormen van honger en ondervoeding in de wereld hebben geëlimineerd. Wat is de status nu en zijn we op de goede weg?
+In 2030 willen de landen die zich aan de [Sustainable Development Goals](https://unstats.un.org/sdgs/) hebben gecommitteerd alle vormen van honger en ondervoeding in de wereld hebben geëlimineerd. Wat is de status nu en zijn we op de goede weg?
 
 ### Huidige status
 Er zijn `r dim(filter(top10Defc, deficiency >= 100/3))[1]` landen waar meer dan de een derde van de bevolking structureel ondervoed is (data 2016). Dit zijn de roodgekleurde landen op de kaart. Veruit de hoogste nood heerst in de Centraal Afrikaanse Republiek.
