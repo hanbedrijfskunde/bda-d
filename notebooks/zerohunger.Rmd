@@ -83,7 +83,7 @@ p1 <- newDF %>%
       title = "% of population undernourished"
     )
   )
-api_create(p1, filename = "zerohunger")
+# api_create(p1, filename = "zerohunger")
 
 # Top 10 malnutrition
 top10Defc <- filter(newDF, year == 2016) %>%
@@ -118,7 +118,7 @@ Map <- Map %>% addPolygons(
   dashArray = '3',
   fillOpacity = 0.7,
   highlight = highlightOptions(
-     weight = 5,
+    weight = 5,
     color = "#666",
     dashArray = "",
     fillOpacity = 0.7,
@@ -149,7 +149,7 @@ Map
 ```
 
 ### Trends
-Helaas is er geen duidelijke verbetering zichtbaar als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een duidelijke verbetering hebben laten zien zijn Namibië, Ethiopië en Angola.
+Helaas is er geen verbetering te zien als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een significante verbetering hebben laten zien zijn Namibië, Ethiopië en Angola.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
 p1
