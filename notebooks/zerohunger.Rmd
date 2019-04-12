@@ -149,7 +149,7 @@ Map
 ```
 
 ### Trends
-Helaas is er geen algemene verbetering te zien als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een significante verbetering hebben laten zien zijn Namibië, Ethiopië en Angola.
+Helaas is er geen algemene verbetering te zien als we de trend bekijken vanaf 2009. Duidelijk zichtbaar is het desastreuse effect van geweldadige conflicten (bijv. CAR en Yemen). Landen die een significante verbetering hebben laten zien, zijn Namibië, Ethiopië en Angola.
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, fig.width=10, fig.height=5}
 p1
